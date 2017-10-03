@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import elementary_functions
-import initializer_functions
-import forward_prop
-import backward_prop
+from elementary_functions import *
+from initializer_functions import *
+from forward_prop import *
+from backward_prop import *
 
 
 def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 12000, optimizer = 'gradient_descent', lambd = 0, keep_prob = 1.0, mini_batch_size = 64, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8, print_cost = True):
