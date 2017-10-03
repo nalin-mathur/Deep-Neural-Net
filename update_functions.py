@@ -1,6 +1,19 @@
-
+"""
+FUNCTIONS FOR PARAMETER UPDATING
+"""
 
 def update_parameters_gradient_descent(parameters, grads, learning_rate):
+    """
+    Updates parameters by gradient descent algorithm.
+
+    Input:
+        parameters : Python dictionary containing weights and biases.
+        grads : Python dictionary containing all gradients.
+        learning_rate : For rate of descent.
+
+    Output:
+        parameters : Updated parameters dictionary.
+    """
 
 	L = len(parameters)//2
 
@@ -11,6 +24,20 @@ def update_parameters_gradient_descent(parameters, grads, learning_rate):
 	return parameters
 
 def update_parameters_momentum(parameters, grads, v, beta, learning_rate):
+    """
+    Updates parameters by momentum algorithm.
+
+    Input:
+        parameters : Python dictionary containing weights and biases.
+        grads : Python dictionary containing all gradients.
+        v : Python dictionary containing all momentum/velocity terms.
+        beta : Constant for momentum updating.
+        learning_rate : For rate of descent.
+
+    Output:
+        parameters : Updated parameters dictionary.
+        v : Updated moments/velocities.
+    """
 
 	L = len(parameters)//L
 
@@ -25,6 +52,27 @@ def update_parameters_momentum(parameters, grads, v, beta, learning_rate):
 
 
 def update_parameters_adam(parameters, grads, v, s, t,learning_rate, beta1 = 0.9, beta2 = 0.999 , epsilon = 1e-8):
+
+    """
+    Updates parameters by momentum algorithm.
+
+    Input:
+        parameters : Python dictionary containing weights and biases.
+        grads : Python dictionary containing all gradients.
+        v : Python dictionary containing all momentum/velocity terms.
+        s : Python dictionary containing all RMSprop terms.
+        t : Number which tells us the pass. For correction of v and s terms.
+        learning_rate : For rate of descent.
+        beta1 : Constant for momentum updating.
+        beta2 : Constant for RMSprop updating.
+        epsilon: For correction of correction. LOL.
+
+    Output:
+        parameters : Updated parameters dictionary.
+        v : Updated moments/velocities.
+        s : Updated RMSprop terms.
+
+    """
 
 	L = len(parameters)//2
 	v_corrected = {}

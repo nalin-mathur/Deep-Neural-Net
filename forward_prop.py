@@ -1,13 +1,14 @@
 """
 FUNCTIONS NEEDED FOR FORWARD PROPAGATION
 """
+
 def linear_forward(A_prev , W , b):
 
 	"""
 	Implements linear part of the NN forward propogation
 
 	Input:
-		A_ : Activations  matrix of the previous layer which serves as input to the present layer. Dimensions : (length of previous layer, number of examples)
+		A_prev : Activations  matrix of the previous layer which serves as input to the present layer. Dimensions : (length of previous layer, number of examples)
 		W : Weight matrix for current layer. Dimensions : (length of current layer, length of previous layer)
 		b : Bias vector for current layer. Dimensions : (length of current layer, 1)
 
@@ -17,7 +18,7 @@ def linear_forward(A_prev , W , b):
 
 	"""
 	Z = np.dot(W,A_prev) + b
-	cache = (A_prev,W,b)
+	cache = [A_prev,W,b]
 
 	return Z , cache
 
@@ -85,7 +86,7 @@ def L_model_forward(X, parameters, keep_prob = 1.0):
 		A, cache = linear_activation_forward(A_prev, parameters['W' + str(l)] , parameters['b' + str(l)], 'relu')
 
 		if keep_prob < 1.0:
-			D = np.random.randn(A.shape[0], A.shape[1])
+			D = np.random.rand(A.shape[0], A.shape[1])
 			D = D < keep_prob
 			A = np.multiply(A,D)
 			A /= keep_prob

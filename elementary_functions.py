@@ -4,7 +4,9 @@
 
 
 """
-The first set of functions return the said values along with a cache (activation_cache : Z).
+SET1
+ The first set of functions return the said values along with a cache (activation_cache : Z).
+ These are used for forward propagation
 """
 def sigmoid(Z):
 	A = np.sigmoid(Z)
@@ -17,36 +19,40 @@ def relu(Z):
 	return A, Z
 
 def tanh(Z):
-	cache = Z
 	A = (np.exp(Z) + np.exp(-Z) ) /(np.exp(Z) - np.exp(-Z))
+    cache = Z
 	return A, Z
 
+
+"""
+SET2
+ These are the set of functions return the derivatives of the said functions.
+ They are used in backward propagation.
+"""
 def sigmoid_backwards(dA, activation_cache):
-	Z = activation_cache
+    Z = activation_cache
 	g_dashZ = np.multiply(sigmoid(Z), 1 - sigmoid(Z))
 	dZ = np.multiply(Z, g_dashZ)
-
 	return dZ
 
 def relu_backwards(dA, activation_cache):
 	Z = activation_cache
-
 	g_dashZ = np.multiply(Z, Z>0)
-
 	dZ = np.multiply(dA, g_dashZ)
-
 	return dZ
 
 def tanh_backwards(dA, activation_cache):
 	Z = activation_cache
-
 	g_dashZ = 1 - (tanh(Z)**2)
 	dZ = np.multiply(dA, g_dashZ)
 
 	return dZ
 
 
-
+"""
+SET3
+ These functions compute the cost and return the same.
+"""
 
 
 def compute_cost(AL, Y, parameters, lambd = 0):
