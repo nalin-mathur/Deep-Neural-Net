@@ -2,6 +2,9 @@
 FUNCTIONS NEEDED FOR BACKWARD PROPAGATION
 """
 
+import numpy as np
+from elementary_functions import *
+
 def linear_backward(dZ, cache):
     """
     Implements linear part of backward propogation.
@@ -17,14 +20,14 @@ def linear_backward(dZ, cache):
         db : Numpy matrix containing derivatives with respect to biases of current layer.
     """
 
-	A_prev, W, b = cache
-	m = A_prev.shape[1]
+    A_prev, W, b = cache
+    m = A_prev.shape[1]
 
-	dW = (1/m)*np.dot(dZ,cache[0].T)
-	db = (1/m)*np.sum(dZ, axis = 1, keepdims = True)
-	dA_prev = np.dot(cache[1].T,dZ)
+    dW = (1/m)*np.dot(dZ,cache[0].T)
+    db = (1/m)*np.sum(dZ, axis = 1, keepdims = True)
+    dA_prev = np.dot(cache[1].T,dZ)
 
-	return dA_prev, dW, db
+    return dA_prev, dW, db
 
 def linear_activation_backward(dA, cache, activation):
     """
@@ -40,21 +43,23 @@ def linear_activation_backward(dA, cache, activation):
         dW : Numpy matrix containing derivatives with respect to weights of current layer.
         db : Numpy matrix containing derivatives with respect to biases of current layer.
     """
-	linear_cache , activation_cache = cache
 
-	if activation  == "sigmoid" :
-		dZ = sigmoid_backward(dA, activation_cache)
-		dA_prev , dW, db = linear_backwards(dZ, linear_cache)
+    linear_cache , activation_cache = cache
 
-	if activation == "relu" :
-		dZ = relu_backward(dA, activation_cache)
-		dA_prev , dW, db = linear_backwards(dZ, linear_cache)
+    if activation  == 'sigmoid' :
+    	dZ = sigmoid_backwards(dA, activation_cache)
+    	dA_prev , dW, db = linear_backward(dZ, linear_cache)
 
-	if activation == "tanh" :
+    elif activation == 'relu':
+		dZ = relu_backwards(dA, activation_cache)
+		dA_prev , dW, db = linear_backward(dZ, linear_cache)
+
+    elif activation == 'tanh':
 		dZ = tanh_backwards(dA, activation_cache)
-		dA_prev, dW, db = linear_backwards(dZ, linear_cache)
+		dA_prev, dW, db = linear_backward(dZ, linear_cache)
 
-	return dA_prev , dW, db
+
+    return dA_prev , dW, db
 
 
 def L_model_backwards(AL, Y, caches, lambd = 0, keep_prob = 1.0):
@@ -72,30 +77,28 @@ def L_model_backwards(AL, Y, caches, lambd = 0, keep_prob = 1.0):
         grads : Python dictionary containing all the required gradients.
     """
 
-	grads = {}
-	L = len(caches)
-	m = AL.shape[1]
-	Y = Y.reshape(AL.shape)
+    grads = {}
+    L = len(caches)
+    m = AL.shape[1]
+    Y = Y.reshape(AL.shape)
 
-	dAL = -(np.divide(Y,AL) - np.divide(1-Y, 1-AL) )
+    grads['dA' + str(L)] = -(np.divide(Y,AL + 1e-10) - np.divide(1-Y, 1-AL + 1e-10) )
 
-	current_cache = caches[L-1]
-	grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_activation_backward(dAL, current_cache, 'sigmoid')
+    current_cache = caches[L-1]
 
-	for l in reversed(range(L-1)):
+    for l in reversed(range(L-1)):
 
-		current_cache = caches[l]
-		linear_cache, activation_cache = current_cache
-		W = linear_cache[1]
+    	current_cache = caches[l]
+    	linear_cache, activation_cache = current_cache
+    	W = linear_cache[1]
+    	grads["dA" + str(l+1)], grads["dW" + str(l+1)], grads["db" + str(l+1)] = linear_activation_backward(grads["dA" + str(l+2)], current_cache, 'relu')
 
-		grads["dA" + str(l+1)], grads["dW" + str(l+1)], grads["db" + str(l+1)] = linear_activation_backward(grads["dA" + str(l+2)], current_cache, 'relu')
+    	if lambd != 0:
+    		grads["dW" + str(l+1)] += (lambd/m)*W
 
-		if lambd != 0:
-			grads["dW" + str(l+1)] += (lambd/m)*W
+    	if keep_prob < 1.0:
+    		D = linear_cache[3]
+    		grads["dA" + str(l+1)] *= D
+    		grads["dA" + str(l+1)] /= keep_prob
 
-		if keep_prob < 1.0:
-			D = linear_cache[3]
-			grads["dA" + str(l+1)] *= D
-			grads["dA" + str(l+1)] /= keep_prob
-
-	return grads
+    return grads

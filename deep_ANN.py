@@ -4,9 +4,10 @@ from elementary_functions import *
 from initializer_functions import *
 from forward_prop import *
 from backward_prop import *
+from update_functions import *
 
 
-def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 12000, optimizer = 'gradient_descent', lambd = 0, keep_prob = 1.0, mini_batch_size = 64, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8, print_cost = True):
+def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 100, optimizer = 'gradient_descent', lambd = 0, keep_prob = 1.0, mini_batch_size = 64, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8, print_cost = True):
 
 	"""
 	Entire Nerual Network Model which returns learned parameters.
@@ -52,7 +53,7 @@ def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 12000, optim
 
 			yhat, caches = L_model_forward(mini_batch_X, parameters, keep_prob)
 
-			cost = compute_cost(yhat, mini_batch_Y, parameters, lamb)
+			cost = compute_cost(yhat, mini_batch_Y, parameters, lambd)
 
 			grads = L_model_backwards(yhat, mini_batch_Y, caches, lambd, keep_prob)
 

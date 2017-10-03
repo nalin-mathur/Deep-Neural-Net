@@ -1,4 +1,5 @@
-
+import numpy as np
+import math
 
 def random_mini_batches(X, Y, mini_batch_size = 64):
 	"""
@@ -22,7 +23,7 @@ def random_mini_batches(X, Y, mini_batch_size = 64):
 	shuffled_X = X[:, permutation]
 	shuffled_Y = Y[:, permutation].reshape((1,m))
 
-	complete_minibatch_number = math.floor(m/mini_batch_size)
+	complete_minibatch_number = int(math.floor(m/mini_batch_size))
 
 	for k in xrange(complete_minibatch_number):
 
@@ -58,9 +59,9 @@ def initialize_parameters(layer_dims, initialization_factor = '0.01'):
 	"""
 
 	parameters = {}
-	depth = len(layer_dims)
+	L = len(layer_dims)
 
-	for l in xrange(1,depth):
+	for l in xrange(1,L):
 
 		if initialization_factor == '0.01':
 			parameters['W' + str(l)] = np.random.randn(layer_dims[l] , layer_dims[l-1])*0.01
@@ -70,6 +71,7 @@ def initialize_parameters(layer_dims, initialization_factor = '0.01'):
 			parameters["W" + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1])*np.sqrt(1/layer_dims[l-1])
 
 		parameters['b' + str(l)] = np.zeros( (layer_dims[l], 1) )*0.01
+
 
 	return parameters
 

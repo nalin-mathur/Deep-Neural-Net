@@ -1,7 +1,7 @@
 """
  The following are a few elementary functions needed to implement the Deep ANN.
 """
-
+import numpy as np
 
 """
 SET1
@@ -9,7 +9,7 @@ SET1
  These are used for forward propagation
 """
 def sigmoid(Z):
-	A = np.sigmoid(Z)
+	A = 1/(1+np.exp(np.float32(-Z)))
 	cache = Z
 	return Z, cache
 
@@ -20,7 +20,7 @@ def relu(Z):
 
 def tanh(Z):
 	A = (np.exp(Z) + np.exp(-Z) ) /(np.exp(Z) - np.exp(-Z))
-    cache = Z
+	cache = Z
 	return A, Z
 
 
@@ -30,8 +30,9 @@ SET2
  They are used in backward propagation.
 """
 def sigmoid_backwards(dA, activation_cache):
-    Z = activation_cache
-	g_dashZ = np.multiply(sigmoid(Z), 1 - sigmoid(Z))
+	Z = activation_cache
+	A , cahce = sigmoid(Z)
+	g_dashZ = np.multiply(A, 1 - A)
 	dZ = np.multiply(Z, g_dashZ)
 	return dZ
 
@@ -60,7 +61,7 @@ def compute_cost(AL, Y, parameters, lambd = 0):
 	m = Y.shape[1]
 	L = len(parameters)//2
 
-	cost = -(1/m)*(np.dot(Y , np.log(AL).T) + np.dot(1-Y, np.log(1-AL).T) )
+	cost = -(1/m)*(np.dot(Y , np.log(np.float32(AL).T)) + np.dot(1-Y, np.log(np.float32((1-AL).T))))
 	cost = np.squeeze(cost)
 
 	if lambd != 0:

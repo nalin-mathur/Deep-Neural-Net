@@ -1,6 +1,8 @@
 """
 FUNCTIONS NEEDED FOR FORWARD PROPAGATION
 """
+import numpy as np
+from elementary_functions import *
 
 def linear_forward(A_prev , W , b):
 
@@ -17,6 +19,9 @@ def linear_forward(A_prev , W , b):
 		cache : Python dictionary containing 'A', 'W', 'b' ; stored for computing the backward pass effeciently.
 
 	"""
+
+	
+
 	Z = np.dot(W,A_prev) + b
 	cache = [A_prev,W,b]
 
@@ -47,13 +52,13 @@ def linear_activation_forward(A_prev, W, b , activation = "relu"):
 		A, activation_cache = sigmoid(Z)
 
 	if activation ==  'relu':
-		Z, linear_cace = linear_forward(A_prev, W, b)
+		Z, linear_cache = linear_forward(A_prev, W, b)
 		A, activation_cache = relu(Z)
 	if activation == 'tanh' :
 		Z, linear_cache = linear_forward(A_prev,W,b)
 		A, activation_cache = tanh(Z)
 
-	cache = (linear_cache, activation_cache)
+	cache = [linear_cache, activation_cache]
 
 	return A, cache
 
@@ -80,8 +85,7 @@ def L_model_forward(X, parameters, keep_prob = 1.0):
 	caches = []
 	A = X
 	L = len(parameters)//2  # Number of layers of the neural network. Each layer has one parameter of weights and one of the biases.
-
-	for l in xrange(1,L-1):
+	for l in xrange(1,L):
 		A_prev = A
 		A, cache = linear_activation_forward(A_prev, parameters['W' + str(l)] , parameters['b' + str(l)], 'relu')
 
