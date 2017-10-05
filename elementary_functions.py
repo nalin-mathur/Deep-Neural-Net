@@ -9,19 +9,19 @@ SET1
  These are used for forward propagation
 """
 def sigmoid(Z):
-	A = 1/(1+np.exp(np.float32(-Z)))
+	A = 1/(1+np.exp(np.float32(-1*Z)))
 	cache = Z
-	return Z, cache
+	return A, cache
 
 def relu(Z):
 	A = np.maximum(Z,0)
 	cache = Z
-	return A, Z
+	return A, cache
 
 def tanh(Z):
 	A = (np.exp(Z) + np.exp(-Z) ) /(np.exp(Z) - np.exp(-Z))
 	cache = Z
-	return A, Z
+	return A, cache
 
 
 """
@@ -61,8 +61,9 @@ def compute_cost(AL, Y, parameters, lambd = 0):
 	m = Y.shape[1]
 	L = len(parameters)//2
 
-	cost = -(1/m)*(np.dot(Y , np.log(np.float32(AL).T)) + np.dot(1-Y, np.log(np.float32((1-AL).T))))
+	cost = -(1/m)*(np.dot( Y,np.log(AL.T) ) + np.dot( 1-Y,np.log((1-AL).T) ))
 	cost = np.squeeze(cost)
+
 
 	if lambd != 0:
 		L2_regularization_cost = 0
@@ -73,3 +74,12 @@ def compute_cost(AL, Y, parameters, lambd = 0):
 		cost += L2_regularization_cost
 
 	return cost
+
+
+
+
+
+
+
+
+

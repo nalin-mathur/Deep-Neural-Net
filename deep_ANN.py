@@ -7,7 +7,7 @@ from backward_prop import *
 from update_functions import *
 
 
-def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 100, optimizer = 'gradient_descent', lambd = 0, keep_prob = 1.0, mini_batch_size = 64, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8, print_cost = True):
+def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 15000, optimizer = 'gradient_descent', lambd = 0, keep_prob = 1.0, mini_batch_size = 64, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8, print_cost = True):
 
 	"""
 	Entire Nerual Network Model which returns learned parameters.
@@ -43,6 +43,9 @@ def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 100, optimiz
 	elif optimizer == 'Adams':
 		v, s = initialize_adam(parameters)
 
+	yhat, accuracy = predict(parameters, X, Y)
+	print "The accuracy is : " , accuracy
+
 	for i in xrange(num_epochs):
 
 		mini_batches = random_mini_batches(X, Y, mini_batch_size)
@@ -67,7 +70,7 @@ def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 100, optimiz
 
 
 		if print_cost and i%1000 == 0:
-			print "Cose after after epoch " , i , " : " , cost
+			print "Cost after after epoch " , i , " : " , cost
 		if i%100 == 0:
 			costs.append(cost)
 
@@ -78,3 +81,25 @@ def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 100, optimiz
 	plt.show()
 
 	return parameters
+
+
+def predict(parameters, X, Y, keep_prob = 1.0):
+
+	yhat , caches = L_model_forward(parameters, X, keep_prob)
+	accuracy = np.sum(yaht==Y)/(Y.shape[1])
+	return yhat , accuracy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
