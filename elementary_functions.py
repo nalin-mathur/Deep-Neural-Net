@@ -9,7 +9,7 @@ SET1
  These are used for forward propagation
 """
 def sigmoid(Z):
-	A = 1/(1+np.exp(np.float32(-1*Z)))
+	A = 1/(1+np.exp(np.float32(-Z)))
 	cache = Z
 	return A, cache
 
@@ -19,7 +19,7 @@ def relu(Z):
 	return A, cache
 
 def tanh(Z):
-	A = (np.exp(Z) + np.exp(-Z) ) /(np.exp(Z) - np.exp(-Z))
+	A = (np.exp(Z) - np.exp(-Z) ) /(np.exp(Z) + np.exp(-Z))
 	cache = Z
 	return A, cache
 
@@ -31,7 +31,7 @@ SET2
 """
 def sigmoid_backwards(dA, activation_cache):
 	Z = activation_cache
-	A , cahce = sigmoid(Z)
+	A , cache = sigmoid(Z)
 	g_dashZ = np.multiply(A, 1 - A)
 	dZ = np.multiply(Z, g_dashZ)
 	return dZ
@@ -60,9 +60,15 @@ def compute_cost(AL, Y, parameters, lambd = 0):
 
 	m = Y.shape[1]
 	L = len(parameters)//2
+	cost1 = np.dot(Y, (np.log(AL)).T ) 
+	cost2 = np.dot(1-Y, (np.log(1-AL)).T)
+	# print "cost 1 : " , cost1
+	# print "cost 2 : " , cost2
+	# cost = -(cost1 + cost2)/(m)
 
-	cost = -(1/m)*(np.dot( Y,np.log(AL.T) ) + np.dot( 1-Y,np.log((1-AL).T) ))
+	cost = -(np.dot( Y , (np.log(AL)).T ) + np.dot( 1-Y, (np.log(1-AL)).T ) )
 	cost = np.squeeze(cost)
+	cost = cost/m
 
 
 	if lambd != 0:
@@ -72,6 +78,8 @@ def compute_cost(AL, Y, parameters, lambd = 0):
 
 		L2_regularization_cost *= (lambd/(2*m))
 		cost += L2_regularization_cost
+
+
 
 	return cost
 

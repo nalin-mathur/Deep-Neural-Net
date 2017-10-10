@@ -7,7 +7,7 @@ from backward_prop import *
 from update_functions import *
 
 
-def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 15000, optimizer = 'gradient_descent', lambd = 0, keep_prob = 1.0, mini_batch_size = 64, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8, print_cost = True):
+def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 15000, optimizer = 'gradient_descent', initialization_factor = '0.01', lambd = 0, keep_prob = 1.0, mini_batch_size = 64, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8, print_cost = True):
 
 	"""
 	Entire Nerual Network Model which returns learned parameters.
@@ -36,15 +36,15 @@ def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 15000, optim
 	costs = []
 	t = 0
 
-	parameters = initialize_parameters(layer_dims)
+	parameters = initialize_parameters(layer_dims, initialization_factor)
 
 	if optimizer == 'momentum':
 		v = initialize_momentum_velocity(parameters)
 	elif optimizer == 'Adams':
 		v, s = initialize_adam(parameters)
 
-	yhat, accuracy = predict(parameters, X, Y)
-	print "The accuracy is : " , accuracy
+	# yhat, accuracy = predict(parameters, X, Y)
+	# print "The accuracy is : " , accuracy
 
 	for i in xrange(num_epochs):
 
@@ -57,7 +57,7 @@ def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 15000, optim
 			yhat, caches = L_model_forward(mini_batch_X, parameters, keep_prob)
 
 			cost = compute_cost(yhat, mini_batch_Y, parameters, lambd)
-
+		
 			grads = L_model_backwards(yhat, mini_batch_Y, caches, lambd, keep_prob)
 
 			if optimizer == 'gradient_descent':
@@ -82,11 +82,10 @@ def nn_model(X, Y, layer_dims, learning_rate = 0.0001, num_epochs = 15000, optim
 
 	return parameters
 
+def predict(X, parameters, Y, keep_prob = 1.0):
 
-def predict(parameters, X, Y, keep_prob = 1.0):
-
-	yhat , caches = L_model_forward(parameters, X, keep_prob)
-	accuracy = np.sum(yaht==Y)/(Y.shape[1])
+	yhat , caches = L_model_forward(X, parameters, keep_prob)
+	accuracy = np.sum(yhat==Y)/(Y.shape[1])
 	return yhat , accuracy
 
 

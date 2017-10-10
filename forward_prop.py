@@ -47,15 +47,15 @@ def linear_activation_forward(A_prev, W, b , activation = "relu"):
 			"activation cache" : Z
 				"""
 
-	if activation == 'sigmoid':
-		Z, linear_cache = linear_forward(A_prev, W, b)
+	Z, linear_cache = linear_forward(A_prev, W, b)
+
+	if activation == "sigmoid":
 		A, activation_cache = sigmoid(Z)
 
-	if activation ==  'relu':
-		Z, linear_cache = linear_forward(A_prev, W, b)
+	if activation == "relu":
 		A, activation_cache = relu(Z)
-	if activation == 'tanh' :
-		Z, linear_cache = linear_forward(A_prev,W,b)
+
+	if activation == "tanh" :
 		A, activation_cache = tanh(Z)
 
 	cache = [linear_cache, activation_cache]
@@ -85,9 +85,10 @@ def L_model_forward(X, parameters, keep_prob = 1.0):
 	caches = []
 	A = X
 	L = len(parameters)//2  # Number of layers of the neural network. Each layer has one parameter of weights and one of the biases.
+
 	for l in xrange(1,L):
 		A_prev = A
-		A, cache = linear_activation_forward(A_prev, parameters['W' + str(l)] , parameters['b' + str(l)], 'relu')
+		A, cache = linear_activation_forward(A_prev, parameters["W" + str(l)] , parameters["b" + str(l)], "relu")
 
 		if keep_prob < 1.0:
 			D = np.random.rand(A.shape[0], A.shape[1])
@@ -100,7 +101,10 @@ def L_model_forward(X, parameters, keep_prob = 1.0):
 
 		caches.append(cache)
 
-	yhat, cache = linear_activation_forward(A, parameters['W' + str(L)] , parameters['b' + str(L)], 'sigmoid' )
+	yhat, cache = linear_activation_forward(A, parameters["W" + str(L)] , parameters["b" + str(L)], 'sigmoid' )
 	caches.append(cache)
 
 	return yhat, caches
+
+
+
